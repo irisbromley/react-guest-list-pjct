@@ -2,9 +2,12 @@ import './App.css';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 
+const baseUrl = 'http://localhost:4000';
+
 function Guest(props) {
   return (
-    <div>
+    // Set each guest inside the div to this attribute
+    <div data-test-id="guest">
       <h3>
         <input
           checked={false}
@@ -13,6 +16,7 @@ function Guest(props) {
         />
         {props.firstName}
         {props.lastName}
+        <button>Remove</button>
       </h3>
     </div>
   );
@@ -44,16 +48,27 @@ export default function App() {
     setLastName(event.target.value);
   };
 
-  const handleEnterPress = (event) => {
+  const handleEnterPress = async (event) => {
     if (event.key === 'Enter') {
+      // clear input
+      setFirstName('');
+      setLastName('');
       // Get input value
-      console.log('enter press here');
+      const response = await fetch(`${baseUrl}/guests`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ firstName: firstName, lastName: lastName }),
+      });
+      const createdGuest = await response.json();
+      setGuests([...guests, createdGuest]);
     }
   };
 
   // fetch data from guest API
   useEffect(() => {
-    fetch('http://localhost:4000/guests')
+    fetch(`${baseUrl}/guests`)
       .then((response) => response.json())
       .then((data) => setGuests(data))
       .catch((error) => console.log(error));
@@ -64,7 +79,6 @@ export default function App() {
     <div data-test-id="guest">
       <header className="App-header">
         <h1>Guest List</h1>
-        <p> Oscars's 7th birthday party:</p>
         <form>
           <label htmlFor="First name">
             <input
@@ -87,16 +101,6 @@ export default function App() {
           </label>
         </form>
         <div>
-          <ul>
-            <li>
-              <input
-                checked={isChecked}
-                type="checkbox"
-                onChange={(event) => setIsChecked(event.currentTarget.checked)}
-              />
-            </li>
-          </ul>
-
           {guests.map((guest) => {
             return (
               <div key={guest.id}>
