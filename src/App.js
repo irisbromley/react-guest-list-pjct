@@ -4,15 +4,17 @@ import { useEffect, useState } from 'react';
 
 function Guest(props) {
   return (
-    <>
-      <div>
-        <h3>
-          {props.firstname}
-          {props.lastname}
-        </h3>
-      </div>
-      <hr />
-    </>
+    <div>
+      <h3>
+        <input
+          checked={false}
+          type="checkbox"
+          // onChange={(event) => setIsChecked(event.currentTarget.checked)}
+        />
+        {props.firstName}
+        {props.lastName}
+      </h3>
+    </div>
   );
 }
 
@@ -33,13 +35,13 @@ export default function App() {
   // checkbox State
   const [isChecked, setIsChecked] = useState(false);
 
+  const [guests, setGuests] = useState([]);
+
   const handleChangefirst = (event) => {
     setFirstName(event.target.value);
-    Guest.firstName = event.target.value;
   };
   const handleChangelast = (event) => {
     setLastName(event.target.value);
-    Guest.lastName = event.target.value;
   };
 
   const handleEnterPress = (event) => {
@@ -53,9 +55,10 @@ export default function App() {
   useEffect(() => {
     fetch('http://localhost:4000/guests')
       .then((response) => response.json())
-      .then((data) => console.log(data))
+      .then((data) => setGuests(data))
       .catch((error) => console.log(error));
   }, []);
+  console.log(guests);
 
   return (
     <div data-test-id="guest">
@@ -93,32 +96,14 @@ export default function App() {
               />
             </li>
           </ul>
-          <table>
-            <tr>
-              <th>
-                <input
-                  checked={isChecked}
-                  type="checkbox"
-                  onChange={(event) =>
-                    setIsChecked(event.currentTarget.checked)
-                  }
-                />
-              </th>
-              <th>First name: </th>
-              <th>Last name:</th>
-            </tr>
-            <tr>
-              <td>
-                <Guest input type="checkbox" isAttending={false} />
-              </td>
-              <td>
-                <Guest firstname />
-              </td>
-              <td>
-                <Guest lastname />
-              </td>
-            </tr>
-          </table>
+
+          {guests.map((guest) => {
+            return (
+              <div key={guest.id}>
+                <Guest firstName={guest.firstName} lastName={guest.lastName} />
+              </div>
+            );
+          })}
         </div>
       </header>
     </div>
