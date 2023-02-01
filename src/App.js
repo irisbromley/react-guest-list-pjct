@@ -5,17 +5,16 @@ import { useEffect, useState } from 'react';
 const baseUrl = 'http://localhost:4000';
 
 function Guest(props) {
-  // checkbox State
-  const [isChecked, setIsChecked] = useState(false);
-
   return (
     // Set each guest inside the div to this attribute
     <div data-test-id="guest">
       <h3>
         <input
-          checked={false}
+          checked={props.isAttending}
           type="checkbox"
-          onChange={(event) => setIsChecked(event.currentTarget.checked)}
+          onChange={(event) =>
+            props.onCheckboxChange(props.id, event.currentTarget.checked)
+          }
         />
         {props.firstName + ' '}
         {props.lastName}
@@ -89,7 +88,28 @@ export default function App() {
     console.log(deletedGuest);
     setGuests(guests.filter((guest) => guest.id !== id));
   }
+  // attending checkbox
+  async function setAttendingStatus(id, isAttending) {
+    const response = await fetch(`${baseUrl}/guests/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ attending: isAttending }),
+    });
+    const updatedGuest = await response.json();
 
+    setGuests(
+      guests.map((guest) => {
+        if (guest.id === id) {
+          return updatedGuest;
+        } else {
+          return guest;
+        }
+      }),
+    );
+  }
+  console.log(guests);
   return (
     <div data-test-id="guest">
       <header className="App-header">
@@ -124,6 +144,8 @@ export default function App() {
                   lastName={guest.lastName}
                   id={guest.id}
                   onRemoveClick={deleteGuest}
+                  onCheckboxChange={setAttendingStatus}
+                  isAttending={guest.attending}
                 />
               </div>
             );
