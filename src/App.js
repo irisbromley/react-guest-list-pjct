@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react';
 const baseUrl = 'http://localhost:4000';
 
 function Guest(props) {
+  // checkbox State
+  const [isChecked, setIsChecked] = useState(false);
+
   return (
     // Set each guest inside the div to this attribute
     <div data-test-id="guest">
@@ -12,11 +15,16 @@ function Guest(props) {
         <input
           checked={false}
           type="checkbox"
-          // onChange={(event) => setIsChecked(event.currentTarget.checked)}
+          onChange={(event) => setIsChecked(event.currentTarget.checked)}
         />
-        {props.firstName}
+        {props.firstName + ' '}
         {props.lastName}
-        <button>Remove</button>
+        <button
+          onClick={() => props.onRemoveClick(props.id)}
+          className="removeGuestBtn"
+        >
+          Remove
+        </button>
       </h3>
     </div>
   );
@@ -26,6 +34,7 @@ Guest.propTypes = {
   person: PropTypes.shape({
     firstname: PropTypes.string.isRequired,
     lastname: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
   }),
 };
 
@@ -35,9 +44,6 @@ export default function App() {
 
   // last name state
   const [lastName, setLastName] = useState('');
-
-  // checkbox State
-  const [isChecked, setIsChecked] = useState(false);
 
   const [guests, setGuests] = useState([]);
 
@@ -75,6 +81,15 @@ export default function App() {
   }, []);
   console.log(guests);
 
+  async function deleteGuest(id) {
+    const response = await fetch(`${baseUrl}/guests/${id}`, {
+      method: 'DELETE',
+    });
+    const deletedGuest = await response.json();
+    console.log(deletedGuest);
+    setGuests(guests.filter((guest) => guest.id !== id));
+  }
+
   return (
     <div data-test-id="guest">
       <header className="App-header">
@@ -104,7 +119,12 @@ export default function App() {
           {guests.map((guest) => {
             return (
               <div key={guest.id}>
-                <Guest firstName={guest.firstName} lastName={guest.lastName} />
+                <Guest
+                  firstName={guest.firstName}
+                  lastName={guest.lastName}
+                  id={guest.id}
+                  onRemoveClick={deleteGuest}
+                />
               </div>
             );
           })}

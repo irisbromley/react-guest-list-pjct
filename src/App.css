@@ -2,12 +2,6 @@
   text-align: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #828387;
   border-radius: 40px;
@@ -22,8 +16,17 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.removeGuestBtn {
+  margin-left: 5px;
+  text-align: center;
+  padding: 4px;
+  border-radius: 5px;
+  border: none;
+  color: tomato;
+}
+
+.removeGuestBtn:hover {
+  cursor: pointer;
 }
 
 @keyframes App-logo-spin {
