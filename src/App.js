@@ -10,6 +10,7 @@ function Guest(props) {
     <div data-test-id="guest">
       <h3>
         <input
+          aria-label={`${props.firstName} ${props.lastName} attending status`}
           checked={props.isAttending}
           type="checkbox"
           onChange={(event) =>
