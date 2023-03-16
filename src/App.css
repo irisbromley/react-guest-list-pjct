@@ -7,7 +7,7 @@
   border-radius: 40px;
   border: 20px white solid;
   font-family: 'Roboto', sans-serif;
-  min-height: 100vh;
+  min-height: 93vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -15,14 +15,21 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+input {
+  padding: 8px;
+  border-radius: 6px;
+  border-style: none;
+  margin: 6px;
+}
 
 .removeGuestBtn {
   margin-left: 5px;
   text-align: center;
-  padding: 4px;
-  border-radius: 5px;
+  padding: 6px;
+  border-radius: 6px;
   border: none;
-  color: tomato;
+  color: #d42000;
+  margin-left: 16px;
 }
 
 .removeGuestBtn:hover {
