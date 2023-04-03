@@ -77,9 +77,12 @@ export default function App() {
   useEffect(() => {
     fetch(`${baseUrl}/guests`)
       .then((response) => response.json())
-      .then((data) => setGuests(data))
+      .then((data) => {
+        setIsLoading(false);
+        setGuests(data)
+      })
       .catch((error) => console.log(error));
-    setIsLoading(false);
+      
   }, []);
   console.log(guests);
 
