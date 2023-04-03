@@ -39,6 +39,7 @@ Guest.propTypes = {
 };
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
   // first name state
   const [firstName, setFirstName] = useState('');
 
@@ -78,6 +79,7 @@ export default function App() {
       .then((response) => response.json())
       .then((data) => setGuests(data))
       .catch((error) => console.log(error));
+    setIsLoading(false);
   }, []);
   console.log(guests);
 
@@ -110,36 +112,42 @@ export default function App() {
       }),
     );
   }
-  console.log(guests);
+
   return (
     <div data-test-id="guest">
       <header className="App-header">
         <h1>Guest List</h1>
-        <form>
-          <label htmlFor="First name">
-            <input
-              name="firstname"
-              onChange={handleChangefirst}
-              value={firstName}
-              placeholder="Add first name:"
-              required
-            />
-          </label>
-          <label htmlFor="Last name">
-            <input
-              name="lastname"
-              onChange={handleChangelast}
-              value={lastName}
-              placeholder="Add last name:"
-              onKeyDown={handleEnterPress}
-              required
-            />
-          </label>
-        </form>
+        <div>
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : (
+            <form>
+              <label htmlFor="First name">
+                <input
+                  name="firstname"
+                  onChange={handleChangefirst}
+                  value={firstName}
+                  placeholder="Add first name:"
+                  required
+                />
+              </label>
+              <label htmlFor="Last name">
+                <input
+                  name="lastname"
+                  onChange={handleChangelast}
+                  value={lastName}
+                  placeholder="Add last name:"
+                  onKeyDown={handleEnterPress}
+                  required
+                />
+              </label>
+            </form>
+          )}
+        </div>
         <div>
           {guests.map((guest) => {
             return (
-              <div key={guest.id}>
+              <div key={`guest${guest.id}`}>
                 <Guest
                   firstName={guest.firstName}
                   lastName={guest.lastName}
