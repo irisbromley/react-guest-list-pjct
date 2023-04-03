@@ -79,10 +79,9 @@ export default function App() {
       .then((response) => response.json())
       .then((data) => {
         setIsLoading(false);
-        setGuests(data)
+        setGuests(data);
       })
       .catch((error) => console.log(error));
-      
   }, []);
   console.log(guests);
 
